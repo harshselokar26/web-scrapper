@@ -1,91 +1,110 @@
 # 🔎 Business Intelligence Web Scraper
 
-> **Natural-language business discovery + real-place search + website
-> intelligence + Excel export**
+> A dynamic NLP-powered business discovery and web scraping application
+> that finds real businesses, enriches their public information, and
+> exports structured results to Excel.
 
-A lightweight NLP-powered business research tool that lets users
-describe the type of business they are looking for, select a state,
-discover **real businesses**, collect publicly available contact
-information, and export the results to Excel.
+## 🚀 Overview
 
-------------------------------------------------------------------------
+This project lets users search for businesses using a natural-language
+requirement and a selected Indian state.
 
-## ✨ What It Does
-
-Instead of searching the web manually, enter a requirement such as:
+For example:
 
 ``` text
-oil factories
+Business / Requirement: oil factories
+State: Maharashtra
 ```
 
-Select:
+The application discovers real businesses, collects available business
+details, attempts to enrich them through their websites, and presents
+the results in an interactive Streamlit dashboard.
 
-``` text
-Maharashtra
-```
-
-The application then:
+### Core workflow
 
 ``` text
 Natural Language Requirement
             ↓
-      Query Understanding
+     Dynamic NLP Parsing
             ↓
-      Dynamic Search Queries
+      Query Expansion
             ↓
-       Places Discovery
+     Business Discovery
             ↓
-     Real Business Results
+       Real Businesses
             ↓
        Website Crawling
             ↓
-  Contact / Email Extraction
+   Contact Information Extraction
             ↓
-   Data Validation & Cleanup
+     Cleaning & Deduplication
             ↓
-      Streamlit Dashboard
+    Streamlit Dashboard + Map
             ↓
-         Excel Export
+        Excel Export
 ```
-
-### Example searches
-
-  Requirement                  State
-  ---------------------------- ----------------
-  `oil factories`              Maharashtra
-  `rice mills`                 Chhattisgarh
-  `pharmaceutical companies`   Gujarat
-  `steel manufacturers`        Maharashtra
-  `wedding venues`             Maharashtra
-  `cold storage facilities`    Madhya Pradesh
-
-The system is designed to work with **new business categories without
-requiring a hardcoded category list**.
 
 ------------------------------------------------------------------------
 
-## 🚀 Key Features
+## ✨ Features
 
-### 🧠 Natural Language Search
+### 🧠 Dynamic Natural Language Search
 
-Describe the business you need in normal language rather than selecting
-from a fixed category list.
+Users can describe the type of business they need without choosing from
+a fixed category list.
 
-### 📍 State-based Filtering
+Examples:
 
-Choose the target Indian state from a dropdown for reliable geographic
-filtering.
+``` text
+oil factories
+rice mills
+pharmaceutical manufacturers
+steel companies
+wedding venues
+solar panel manufacturers
+cold storage facilities
+industrial automation companies
+```
+
+The NLP layer normalizes the requirement and dynamically generates
+relevant search variations.
+
+### 📍 State Selection
+
+The location is selected through a state dropdown rather than relying on
+NLP to guess the state.
+
+Supported use case:
+
+``` text
+Requirement: rice mills
+State: Chhattisgarh
+```
 
 ### 🏢 Real Business Discovery
 
-Uses a Places-focused search rather than generic web search, reducing
-irrelevant results such as news articles, videos, and social posts.
+The discovery layer is designed to prioritize real-world business/place
+results instead of generic web results such as articles, videos, and
+social media posts.
 
-### 🌐 Website Intelligence
+Business records can include:
 
-For businesses with websites, the scraper attempts to inspect the
-homepage and relevant internal pages such as:
+-   Business name
+-   Website
+-   Phone number
+-   Address
+-   Business type
+-   Rating
+-   Rating count
+-   Latitude
+-   Longitude
 
+### 🌐 Website Enrichment
+
+When a business has a website, the scraper attempts to inspect relevant
+pages such as:
+
+-   Homepage
 -   Contact
 -   Contact Us
 -   About
@@ -93,78 +112,38 @@ homepage and relevant internal pages such as:
 -   Reach Us
 -   Enquiry
 -   Location
+-   Sitemap
+
+The crawler does not need a business-specific scraper for every
+industry.
 
 ### 📧 Contact Extraction
 
-Attempts to collect publicly available:
+The application attempts to extract publicly available:
 
 -   Email addresses
 -   Phone numbers
--   Contact pages
--   Business website
--   Address
+-   Contact page URLs
+-   Website information
 
-### 🗺️ Location Data
+It also handles common HTML contact mechanisms such as `mailto:` and
+`tel:` links.
 
-Uses business listing location data where available:
+### 🗺️ Location Mapping
 
--   Latitude
--   Longitude
--   Address
-
-Results can also be displayed on an interactive map.
+Businesses with coordinates can be displayed on an interactive map
+directly inside the Streamlit application.
 
 ### 📊 Excel Export
 
-Export collected business intelligence into a structured `.xlsx` file
-for further analysis or lead research.
+The collected data can be exported as a structured `.xlsx` file for
+further analysis.
 
 ### ♻️ Deduplication
 
-Search variations are combined while attempting to avoid duplicate
-businesses.
-
-### 📈 Result Metrics
-
-The dashboard summarizes:
-
--   Total businesses
--   Websites found
--   Emails found
--   Phone numbers found
--   Coordinates available
-
-------------------------------------------------------------------------
-
-## 🖥️ Interface
-
-### Search
-
-``` text
-┌──────────────────────────────────────────────────────────┐
-│ Business / Requirement        │ State                    │
-│ oil factories                 │ Maharashtra ▼           │
-└──────────────────────────────────────────────────────────┘
-
-                  🔍 Search & Scrape
-```
-
-### Results
-
-``` text
-🧠 Query Understanding
-
-Business Category: oil factories
-Location: Maharashtra
-
-20 Businesses Found
-
-Businesses   Websites   Emails   Phones   Coordinates
-    20          16         9       18          20
-```
-
-The result table provides the collected business information and an
-interactive location map.
+Multiple search variations can return the same business. The application
+attempts to remove duplicates using available business identifiers such
+as website, place ID, or business name and address.
 
 ------------------------------------------------------------------------
 
@@ -181,28 +160,30 @@ interactive location map.
                          │
                          ▼
               ┌─────────────────────┐
-              │ NLP / Query         │
-              │ Understanding       │
+              │ Dynamic NLP Layer   │
               │                     │
               │ Normalization       │
+              │ Intent Understanding│
               │ Query Expansion     │
               └──────────┬──────────┘
                          │
                          ▼
               ┌─────────────────────┐
-              │ Places Search       │
               │ Business Discovery  │
+              │                     │
+              │ Places Search API   │
               └──────────┬──────────┘
                          │
                          ▼
               ┌─────────────────────┐
-              │ Business Records     │
+              │ Business Records    │
               │                     │
               │ Name                │
+              │ Website             │
               │ Phone               │
               │ Address             │
-              │ Website             │
-              │ Latitude/Longitude  │
+              │ Coordinates         │
+              │ Rating              │
               └──────────┬──────────┘
                          │
                          ▼
@@ -212,13 +193,12 @@ interactive location map.
               │ Homepage            │
               │ Contact Pages       │
               │ About Pages         │
-              │ Sitemap (when found)│
+              │ Sitemap             │
               └──────────┬──────────┘
                          │
                          ▼
               ┌─────────────────────┐
-              │ Information         │
-              │ Extraction          │
+              │ Data Extraction     │
               │                     │
               │ Email               │
               │ Phone               │
@@ -227,7 +207,7 @@ interactive location map.
                          │
                          ▼
               ┌─────────────────────┐
-              │ Cleaning &           │
+              │ Cleaning &          │
               │ Deduplication       │
               └──────────┬──────────┘
                          │
@@ -235,6 +215,9 @@ interactive location map.
                     ▼         ▼
               Streamlit      Excel
               Dashboard      Export
+                    │
+                    ▼
+                   Map
 ```
 
 ------------------------------------------------------------------------
@@ -244,49 +227,64 @@ interactive location map.
 ``` text
 web-scrapper/
 │
-├── app.py                 # Streamlit application
-├── main.py                # End-to-end scraping pipeline
+├── app.py
+├── main.py
 │
-├── nlp_parser.py          # Query understanding / expansion
-├── search.py              # Places/business discovery
-├── scraper.py             # Website crawling
-├── extractor.py            # Email & phone extraction
-├── geocoder.py             # Address geocoding utilities
-├── excel_export.py         # Excel generation
+├── nlp_parser.py
+├── search.py
+├── scraper.py
+├── extractor.py
+├── geocoder.py
+├── excel_export.py
 │
 ├── output/
-│   └── results.xlsx        # Generated output
+│   └── results.xlsx
 │
-├── .env                   # API credentials - DO NOT COMMIT
+├── .env
 ├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
 
-------------------------------------------------------------------------
+### File responsibilities
 
-## ⚙️ Tech Stack
-
-  Component            Technology
-  -------------------- -----------------------------
-  Language             Python
-  UI                   Streamlit
-  NLP                  Dynamic query understanding
-  Business discovery   Serper Places API
-  Web scraping         Requests + BeautifulSoup
-  Data extraction      Python Regex + HTML parsing
-  Geocoding            OpenStreetMap/Nominatim
-  Excel                OpenPyXL
-  Configuration        python-dotenv
+  File                Purpose
+  ------------------- -------------------------------------------------
+  `app.py`            Streamlit user interface
+  `main.py`           End-to-end scraping pipeline
+  `nlp_parser.py`     Dynamic query understanding and query expansion
+  `search.py`         Business/place discovery
+  `scraper.py`        Website crawling
+  `extractor.py`      Email and phone extraction
+  `geocoder.py`       Geocoding utilities
+  `excel_export.py`   Excel file generation
+  `output/`           Generated files
 
 ------------------------------------------------------------------------
 
-## 🔧 Installation
+## 🛠️ Tech Stack
+
+  Layer                    Technology
+  ------------------------ -----------------------------
+  Language                 Python
+  UI                       Streamlit
+  NLP                      Dynamic query understanding
+  Business Discovery       Serper Places API
+  Web Scraping             Requests
+  HTML Parsing             BeautifulSoup
+  Information Extraction   Regex + HTML parsing
+  Geocoding                OpenStreetMap / Nominatim
+  Excel Export             OpenPyXL
+  Configuration            python-dotenv
+
+------------------------------------------------------------------------
+
+## ⚙️ Installation
 
 ### 1. Clone the repository
 
 ``` bash
-git clone <YOUR_GITHUB_REPOSITORY_URL>
+git clone YOUR_GITHUB_REPOSITORY_URL
 cd web-scrapper
 ```
 
@@ -296,7 +294,7 @@ cd web-scrapper
 
 ``` powershell
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+.env\Scripts\Activate.ps1
 ```
 
 #### macOS / Linux
@@ -323,12 +321,12 @@ SERPER_API_KEY=your_serper_api_key
 GROQ_API_KEY=your_groq_api_key
 ```
 
-Only add `GROQ_API_KEY` if your current NLP implementation uses the
-Groq-powered dynamic query parser.
+`GROQ_API_KEY` is required only when the dynamic NLP implementation uses
+Groq.
 
-### ⚠️ Never commit `.env`
+### `.gitignore`
 
-Your `.gitignore` should include:
+Make sure your `.gitignore` contains:
 
 ``` gitignore
 .env
@@ -338,19 +336,19 @@ __pycache__/
 output/*.xlsx
 ```
 
+> Never commit API keys or secrets to GitHub.
+
 ------------------------------------------------------------------------
 
 ## ▶️ Run the Application
 
-Start Streamlit:
+Start the Streamlit application:
 
 ``` bash
 streamlit run app.py
 ```
 
-Then open the local Streamlit URL shown in the terminal.
-
-Example:
+Then open the local URL shown by Streamlit:
 
 ``` text
 http://localhost:8501
@@ -358,172 +356,219 @@ http://localhost:8501
 
 ------------------------------------------------------------------------
 
-## 🔄 How a Search Works
-
-Suppose the user enters:
-
-``` text
-premium wedding venues
-```
-
-and selects:
-
-``` text
-Maharashtra
-```
-
-The system can transform the requirement into related business-search
-concepts such as:
-
-``` text
-wedding venues
-banquet halls
-marriage halls
-function halls
-celebration halls
-```
-
-Those queries are used for business discovery.
-
-The resulting places are then processed individually.
-
-For each business:
-
-``` text
-Business Listing
-      ↓
-Website Available?
-      │
-      ├── No → Keep business listing data
-      │
-      └── Yes
-            ↓
-         Homepage
-            ↓
-       Discover useful
-       internal pages
-            ↓
-      Contact / About
-            ↓
-       Extract public
-       contact details
-```
-
-------------------------------------------------------------------------
-
-## 📋 Output Fields
-
-The Excel output can contain:
-
-  Field             Description
-  ----------------- ----------------------------------------
-  Business Name     Name of the business
-  Category          User's business requirement
-  Business Type     Type returned by business search
-  Website           Official/public website when available
-  Email             Publicly listed email addresses
-  Phone             Publicly listed phone numbers
-  Address           Business address
-  Location          Selected state
-  Latitude          Business latitude
-  Longitude         Business longitude
-  Rating            Listing rating when available
-  Rating Count      Number of ratings when available
-  Contact Pages     Relevant pages discovered
-  Pages Scraped     Number of pages successfully processed
-  Website Status    Website processing result
-  Scraping Status   Overall extraction status
-
-------------------------------------------------------------------------
-
-## 🧪 Example Workflow
+## 🔄 Example Search
 
 ### Input
 
 ``` text
 Business / Requirement:
-rice mills
+oil factories
 
 State:
-Chhattisgarh
+Maharashtra
 ```
 
-### Processing
+### NLP layer
+
+The system dynamically interprets the requirement and can generate
+related search concepts such as:
 
 ``` text
-✓ Query understood
-✓ Search variations generated
-✓ Real places discovered
-✓ Duplicate results removed
-✓ Websites identified
-✓ Contact pages inspected
-✓ Emails / phones extracted
-✓ Coordinates collected
-✓ Excel generated
+oil factories
+oil manufacturers
+oil mills
+oil processing companies
+oil extraction companies
 ```
 
-### Output
+These are used to improve business discovery without maintaining a
+hardcoded category dictionary.
 
-``` text
-Business Name
-Website
-Email
-Phone
-Address
-Latitude
-Longitude
-Rating
-Status
-```
+### Business discovery
+
+The search layer collects real business records.
+
+### Website enrichment
+
+For businesses with websites, the crawler attempts to discover useful
+pages and extract publicly available contact information.
+
+### Final output
+
+The application displays the results in Streamlit and allows the user to
+download them as Excel.
 
 ------------------------------------------------------------------------
 
-## 🧩 Design Decisions
+## 📋 Output Fields
 
-### Why Places search instead of normal web search?
+The generated dataset can contain:
 
-A generic web search can return:
+  Field             Description
+  ----------------- -------------------------------------------------
+  Business Name     Name of the business
+  Category          Normalized business requirement
+  Business Type     Type returned by the business discovery service
+  Website           Business website
+  Email             Publicly available email address
+  Phone             Publicly available phone number
+  Address           Business address
+  Location          Selected state
+  Latitude          Business latitude
+  Longitude         Business longitude
+  Rating            Business rating
+  Rating Count      Number of ratings
+  Contact Pages     Relevant website pages discovered
+  Pages Scraped     Number of successfully processed pages
+  Website Status    Website processing result
+  Scraping Status   Overall extraction status
+
+------------------------------------------------------------------------
+
+## 🧠 Why Dynamic NLP?
+
+The system does not depend on a fixed list such as:
 
 ``` text
-News articles
-YouTube videos
-Facebook posts
-LinkedIn pages
-Blogs
+oil factories → predefined keywords
+rice mills → predefined keywords
+wedding halls → predefined keywords
 ```
 
-For a business discovery application, the goal is to start with
-structured **real-world place/business records**.
+Instead, the NLP layer works dynamically:
 
-The website scraper is then used as a second-stage enrichment layer.
+``` text
+User Requirement
+       ↓
+Normalization
+       ↓
+Intent Understanding
+       ↓
+Query Expansion
+       ↓
+Search Queries
+```
 
-### Why not scrape every page?
+This allows new business categories to be searched without changing the
+application code.
 
-The crawler prioritizes pages likely to contain business information
-instead of crawling an entire website.
+For example, a user can enter:
 
-This keeps the application:
+``` text
+renewable energy equipment suppliers
+```
 
--   Faster
--   Less resource intensive
--   Easier to operate
--   More focused on contact information
+even if that exact category was never explicitly defined in the source
+code.
 
-### Why is some information missing?
+------------------------------------------------------------------------
 
-Public business data is inconsistent.
+## 🌐 Website Scraping Strategy
+
+The crawler uses a multi-stage approach instead of relying only on the
+homepage.
+
+``` text
+Website
+   │
+   ├── Homepage
+   │
+   ├── Internal Links
+   │      ├── Contact
+   │      ├── About
+   │      ├── Location
+   │      └── Enquiry
+   │
+   └── Sitemap
+          └── Relevant URLs
+                 ↓
+          Information Extraction
+```
+
+This improves the chance of finding contact information that is not
+visible on the homepage.
+
+------------------------------------------------------------------------
+
+## ♻️ Data Quality
+
+Business data is not always complete.
 
 A business may have:
 
 -   No website
 -   No public email
--   No contact page
--   A website that blocks automated requests
+-   No public phone number
+-   An inaccessible website
 -   A JavaScript-heavy website
--   Incomplete business listing data
+-   An incomplete business listing
 
-The application keeps the available information rather than discarding
-the entire business.
+The application keeps available business information instead of
+discarding the entire record.
+
+Possible statuses include:
+
+``` text
+COMPLETE
+PARTIAL
+WEBSITE_FOUND
+FAILED
+```
+
+------------------------------------------------------------------------
+
+## 🗺️ Geospatial Information
+
+Where available, the application stores:
+
+``` text
+Latitude
+Longitude
+Address
+```
+
+These coordinates can be used to visualize discovered businesses on the
+Streamlit map.
+
+------------------------------------------------------------------------
+
+## 🧪 Example Queries
+
+The same pipeline can be used for different business categories:
+
+``` text
+oil factories
+```
+
+``` text
+rice mills
+```
+
+``` text
+pharmaceutical manufacturers
+```
+
+``` text
+steel companies
+```
+
+``` text
+wedding venues
+```
+
+``` text
+solar panel manufacturers
+```
+
+``` text
+cold storage facilities
+```
+
+``` text
+industrial automation companies
+```
+
+The user only needs to change the business requirement and state.
 
 ------------------------------------------------------------------------
 
@@ -534,57 +579,55 @@ organization.
 
 The scraper should:
 
--   Access publicly available pages
--   Respect website terms and robots policies where applicable
+-   Access publicly available information
+-   Respect applicable website terms and crawling policies
 -   Use reasonable request timeouts
--   Avoid bypassing authentication or anti-bot protections
--   Avoid collecting private or sensitive information
 -   Avoid aggressive request rates
+-   Avoid authentication-protected content
+-   Avoid bypassing anti-bot or security mechanisms
+-   Avoid collecting private or sensitive information
 
-The output should be treated as research data and independently verified
-before business outreach or commercial use.
+Collected information should be independently verified before commercial
+use or business outreach.
 
 ------------------------------------------------------------------------
 
 ## 🚧 Current Limitations
 
-This is an MVP and has some expected limitations:
+This is an MVP, so some limitations are expected:
 
--   Search API results depend on external search coverage
+-   Search results depend on external API coverage
 -   Some businesses do not have websites
 -   Some websites block automated requests
--   JavaScript-only sites may provide limited content
+-   JavaScript-heavy websites may expose limited content
 -   Email extraction is heuristic
--   Address extraction may be incomplete
--   Search/API quotas can limit result volume
+-   Contact information may be incomplete
+-   External API quotas can limit result volume
 -   Public business information can change over time
 
 ------------------------------------------------------------------------
 
 ## 🔮 Future Improvements
 
-Potential next steps:
-
 -   [ ] Dynamic relevance scoring
--   [ ] Better company/entity deduplication
+-   [ ] Improved business/entity deduplication
 -   [ ] Sitemap-aware crawling
--   [ ] Structured-data extraction from JSON-LD
--   [ ] GST/company registration extraction where publicly available
--   [ ] Industry classification
--   [ ] Confidence score for extracted fields
+-   [ ] JSON-LD structured-data extraction
+-   [ ] Confidence scores for extracted fields
+-   [ ] City and district level filtering
+-   [ ] Search pagination
+-   [ ] Retry queues for failed websites
+-   [ ] Background scraping jobs
 -   [ ] CSV export
 -   [ ] Search history
--   [ ] Background scraping jobs
--   [ ] Retry queues for failed websites
--   [ ] Advanced location filtering by city/district
--   [ ] Multi-page pagination
+-   [ ] Advanced industry classification
 -   [ ] Production deployment
 
 ------------------------------------------------------------------------
 
 ## 📸 Demo
 
-Add screenshots/GIFs to this section after pushing the project:
+Add screenshots or a short GIF to the repository:
 
 ``` text
 docs/
@@ -593,59 +636,54 @@ docs/
 └── workflow.gif
 ```
 
-Then embed them:
+Then include them in this section:
 
 ``` markdown
-![Search](docs/search.png)
+![Search Interface](docs/search.png)
 
-![Results](docs/results.png)
+![Business Results](docs/results.png)
+
+![Workflow](docs/workflow.gif)
 ```
 
-A short GIF showing:
+A useful demo should show:
 
 ``` text
-Enter requirement
-      ↓
+Enter business requirement
+        ↓
 Select state
-      ↓
+        ↓
 Search & Scrape
-      ↓
-Business results
-      ↓
+        ↓
+NLP query understanding
+        ↓
+Real business results
+        ↓
+Website enrichment
+        ↓
 Map
-      ↓
-Download Excel
+        ↓
+Excel export
 ```
-
-makes the repository much easier to understand.
 
 ------------------------------------------------------------------------
 
-## 🎯 Why This Project?
+## 🎯 Project Objective
 
-The project combines several practical engineering concepts:
+The project combines:
 
-``` text
-NLP
-+
-Search / Information Retrieval
-+
-Web Scraping
-+
-Data Extraction
-+
-Geospatial Data
-+
-Data Cleaning
-+
-Excel Automation
-+
-Interactive UI
-```
+-   Natural Language Processing
+-   Information Retrieval
+-   Business Discovery
+-   Web Scraping
+-   Information Extraction
+-   Data Cleaning
+-   Geospatial Data
+-   Excel Automation
+-   Interactive Visualization
 
-The goal is not simply to scrape a website, but to build a small
-**business intelligence pipeline** that converts an unstructured user
-requirement into structured, usable business data.
+The objective is to automate the process of converting an unstructured
+business requirement into structured, usable business intelligence.
 
 ------------------------------------------------------------------------
 
@@ -653,11 +691,10 @@ requirement into structured, usable business data.
 
 **Harsh Selokar**
 
-Built as an NLP + Web Scraping + Business Intelligence project.
+NLP • Web Scraping • AI Automation • Data Engineering
 
 ------------------------------------------------------------------------
 
-## ⭐ If You Find This Useful
+## ⭐ Project
 
-If this project helped you understand business discovery, web scraping,
-or NLP-driven search workflows, consider giving the repository a ⭐.
+If you find the project useful, consider giving the repository a ⭐.

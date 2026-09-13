@@ -685,16 +685,3 @@ The project combines:
 The objective is to automate the process of converting an unstructured
 business requirement into structured, usable business intelligence.
 
-------------------------------------------------------------------------
-
-## 👨‍💻 Author
-
-**Harsh Selokar**
-
-NLP • Web Scraping • AI Automation • Data Engineering
-
-------------------------------------------------------------------------
-
-## ⭐ Project
-
-If you find the project useful, consider giving the repository a ⭐.
